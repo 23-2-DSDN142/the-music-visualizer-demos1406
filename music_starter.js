@@ -8,6 +8,8 @@ let backgroundCol = "#26262c"
 
 
 let angle = 0
+let fft
+
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
 function draw_one_frame(words, vocal, drum, bass, other) {
@@ -15,9 +17,18 @@ function draw_one_frame(words, vocal, drum, bass, other) {
   createCanvas(500,500)
   background(backgroundCol)
 
-  let jaggedness = map(drum, 0, 100, 0, 1);
 
-  drawDrumWaveform(jaggedness);
+  let drumLine = map(drum, 0, 100, 0.5, 0.7);
+  let vocalLine = map(vocal, 0, 100, 0, 1);
+  let bassLine = map(bass, 0, 100, 0, 1);
+  let otherLine = map(other, 0, 100, 0, 1);
+
+  // drawWaveform(drumLine,frenchrose,height/2)
+  // drawWaveform(vocalLine,fluorescentcyan,height/2)
+  // drawWaveform(bassLine,blue,height/2)
+  // drawWaveform(otherLine,spacecadet,height/2)
+
+  drawCube(width/2-25, height*1/2 * drumLine)
 
 
   // Display the current words
@@ -25,9 +36,6 @@ function draw_one_frame(words, vocal, drum, bass, other) {
   textSize(24);
   textAlign(CENTER, CENTER);
   text(words, width / 2, height - 30);
-
-
-
 
 
 
@@ -43,41 +51,21 @@ function draw_one_frame(words, vocal, drum, bass, other) {
 
 }
 
-function drawDrumWaveform(jaggedness) {
-  let middleY = height / 2;
-  let spacing = 10;
+
+
+
+function drawWaveform(line, c, y) {
+  let middleY = y;
+  let spacing = 5;
 
   noFill();
-  stroke(frenchrose);
+  stroke(c);
   strokeWeight(1);
 
   beginShape();
   for (let i = 0; i < width; i += spacing) {
-    let yOffset = (random(-1, 1) * jaggedness * height/2) / 2;
+    let yOffset = (random(-1, 1) * line * height/2) / 2;
     vertex(i, middleY + yOffset);
-  }
-  endShape();
-}
-
-function drawWaveform(y, col) {
-  noFill();
-  stroke(col);
-  strokeWeight(2);
-
-  beginShape();
-  for (let i = 0; i < width; i += 10) {
-    let angle = map(i, 0, width, 0, TWO_PI);
-    let yOffset = sin(angle * 2) * 10; // Adjust this multiplier for wave complexity
-
-    // Create jagged lines by adding random spikes based on volume
-    let spikeFactor = map(y, 0, height, 0, 5); // Adjust this range for spike intensity
-    let randomSpike = random(-spikeFactor, spikeFactor);
-
-    // Fix the line at a constant y-position and only vary the peaks
-    let fixedY = y;
-
-    // Draw the line with the jagged peaks
-    line(i, fixedY, i, fixedY + yOffset + randomSpike);
   }
   endShape();
 }
@@ -122,3 +110,41 @@ function drawWaveform(y, col) {
   //  textAlign(CENTER);
   //  textSize(vocal);
   //  text(words, width/2, height/3);
+
+  function drawCube(x, y){
+    noStroke()
+    // width/2-50, height*1/3
+
+
+    // bottom left
+    fill("#2b2443")
+    beginShape()
+    vertex(x, y)
+    vertex(x - 70, y + 25)
+    vertex(x + 25, y + 160)
+    endShape(CLOSE)
+
+    // bottom right
+    fill("#32304b")
+    beginShape()
+    vertex(x, y)
+    vertex(x + 25, y + 160)
+    vertex(x + 120, y + 25)
+    endShape(CLOSE)
+
+    // top left
+    fill("#183d78")
+    beginShape()
+    vertex(x, y)
+    vertex(x - 70, y + 25)
+    vertex(x + 25, y - 80)
+    endShape(CLOSE)
+
+    // top right
+    fill("#29313e")
+    beginShape()
+    vertex(x, y)
+    vertex(x + 25, y - 80)
+    vertex(x + 120, y + 25)
+    endShape(CLOSE)
+  }
