@@ -1,34 +1,63 @@
 // colour palette
 let spacecadet = "#252A3Fff"
-let fluorescentcyan = "#3DF0EFff"
-let blue = "#3672ACff"
-let yinmnblue = "#2A4F86ff"
-let frenchrose = "#FB368Aff"
+let cyanCol = "#3DF0EFff"
+let blueCol = "#3672ACff"
+let blueCol2 = "#2A4F86ff"
+let pinkCol = "#FB368Aff"
+
 let backgroundCol = "#26262c"
 
 
 let angle = 0
-let fft
-
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
-function draw_one_frame(words, vocal, drum, bass, other) {
+function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
   createCanvas(500,500)
-  background(backgroundCol)
+  background(color("#222639"))
 
+  let col1
+  let col2 = color("#222639")
+  // gradient background
+  // change background colour on the beat drop
+  if(counter > 7200 && counter < 9500){ // 7200 9500
+    col1 = color(pinkCol)
+  }else{
+    col1 = color("#5fe0e5")
+  }
+  drawGradient(col1, col2, width / 2, height, width * 2);
 
-  let drumLine = map(drum, 0, 100, 0.5, 0.7);
+  
+  // variable maps
+  let drumLine = map(drum, 0, 100, 0, 1);
   let vocalLine = map(vocal, 0, 100, 0, 1);
   let bassLine = map(bass, 0, 100, 0, 1);
   let otherLine = map(other, 0, 100, 0, 1);
+  let cubeDrumLine = map(drum, 0, 100, 0.5, 0.6);
 
-  // drawWaveform(drumLine,frenchrose,height/2)
-  // drawWaveform(vocalLine,fluorescentcyan,height/2)
-  // drawWaveform(bassLine,blue,height/2)
-  // drawWaveform(otherLine,spacecadet,height/2)
 
-  drawCube(width/2-25, height*1/2 * drumLine)
+  // waveforms
+  // drawWaveform(drumLine, pinkCol, height * 2/5) 
+  // drawWaveform(vocalLine, cyanCol, height * 2/5)
+  // drawWaveform(bassLine, blueCol, height * 2/5)
+  // drawWaveform(otherLine, blueCol2, height * 2/5)
+
+  
+  
+  // vocal lines
+  drawLines(cyanCol, 72, height/3, vocalLine )
+  drawLines(cyanCol, 72, height/3, -vocalLine)
+  // bass lines
+  drawLines(spacecadet, 78, height/3, bassLine / 3)
+  drawLines(spacecadet, 78, height/3, -bassLine / 3)
+  // drum lines
+  drawLines(pinkCol, 75, height/3, drumLine)
+  drawLines(pinkCol, 75, height/3, -drumLine)
+  
+
+
+  // bouncing cube
+  drawCube(width/2-25, height*1/2 * cubeDrumLine)
 
 
   // Display the current words
@@ -37,6 +66,10 @@ function draw_one_frame(words, vocal, drum, bass, other) {
   textAlign(CENTER, CENTER);
   text(words, width / 2, height - 30);
 
+  // counter for timing
+  fill(255);
+  textSize(16);
+  text("Frame Counter: " + counter, 20, 20);
 
 
   
@@ -51,8 +84,36 @@ function draw_one_frame(words, vocal, drum, bass, other) {
 
 }
 
+function drawGradient(c1, c2, x, y, r) {
+  noFill();
+  for (let d = 0; d <= r; d += 1) {
+    let inter = map(d, 0, r, 0, 1);
+    let c = lerpColor(c1, c2, inter);
+    stroke(c);
+    ellipse(x, y, d, d);
+  }
+}
 
+function drawLines(col, x, y, map){
+  // lines
+  stroke(col)
+  strokeWeight(3)
 
+  // let x = 75;
+  let lineHeight = 5;
+
+  while (x <= width/2) {
+    line(x, y, x, y - lineHeight * map);
+    lineHeight += 5;
+    x += 15;
+  }
+
+  while (x < width - 75) {
+    line(x, y, x, y - lineHeight * map);
+    lineHeight -= 5;
+    x += 15;
+  }
+}
 
 function drawWaveform(line, c, y) {
   let middleY = y;
