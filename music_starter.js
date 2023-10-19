@@ -20,13 +20,41 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   let col2 = color("#222639")
   // gradient background
   // change background colour on the beat drop
-  if(counter > 7200 && counter < 9500){ // 7200 9500
+  if(counter > 7200 && counter < 9600 && counter > 13200 && counter < 16800){ // 7200 9500
     col1 = color(pinkCol)
   }else{
     col1 = color("#5fe0e5")
   }
   drawGradient(col1, col2, width / 2, height, width * 2);
 
+  // background city
+  noStroke()
+  fill("#2a4876")
+  rect(0,320,75,200)
+  rect(75,350,30,200)
+  rect(105,330,40,200)
+  rect(145,345,15,200)
+  rect(160,250,30,300)
+  rect(190,310,30,300)
+  rect(220,330,60,200)
+  rect(280,370,50,200)
+  rect(330,245,50,300)
+  rect(380,350,20,200)
+  rect(400,310,40,200)
+  rect(440,340,60,200)
+
+  // midground city
+  fill("#272f56")
+  rect(0,425,200,200)
+  rect(175,400,130,200)
+  rect(305,440,100,200)
+  rect(405,380,200,200)
+
+  // forground city
+  fill("#25262f")
+  rect(0,250,60,400)
+  rect(60,365,30,200)
+  rect(450,80,50,500)
   
   // variable maps
   let drumLine = map(drum, 0, 100, 0, 1);
@@ -61,15 +89,20 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
 
   // Display the current words
-  fill(255);
   textSize(24);
   textAlign(CENTER, CENTER);
+  fill(pinkCol)
+  text(words, width / 2 - 2, height - 30);
+  fill(cyanCol)
+  text(words, width / 2 + 2, height - 30);
+  fill(255);
   text(words, width / 2, height - 30);
+
 
   // counter for timing
   fill(255);
   textSize(16);
-  text("Frame Counter: " + counter, 20, 20);
+  text("Counter: " + counter, 50, 20);
 
 
   
@@ -97,7 +130,7 @@ function drawGradient(c1, c2, x, y, r) {
 function drawLines(col, x, y, map){
   // lines
   stroke(col)
-  strokeWeight(3)
+  strokeWeight(4)
 
   // let x = 75;
   let lineHeight = 5;
